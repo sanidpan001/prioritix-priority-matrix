@@ -1,0 +1,1009 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Prioritix — Eisenhower Matrix Online | Urgent Important Matrix Planner</title>
+<meta name="description" content="Prioritix is a free eisenhower matrix online planner and priority matrix app: sort tasks into the urgent important matrix, auto-escalate deadlines, and build your daily Top-3 focus list. No signup needed.">
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  body { font-family: 'Inter', system-ui, sans-serif; background: #f4f1ea; }
+  .font-display { font-family: 'Space Grotesk', sans-serif; }
+  input[type=range] { accent-color: #2563eb; }
+  .paper-card { background: #fffdf8; border: 1px solid #e3dccb; box-shadow: 0 1px 2px rgba(60,50,30,.05); }
+  .quad-drop { transition: box-shadow .18s ease, border-color .18s ease; }
+  .quad-drop.drag-over { border-color: #2563eb !important; box-shadow: 0 0 0 3px rgba(37,99,235,.18); }
+  .task-card { cursor: grab; }
+  .task-card:active { cursor: grabbing; }
+  .task-card.dragging { opacity: .45; }
+  @keyframes flash { 0% { background: #fde68a; } 100% { background: transparent; } }
+  .flash { animation: flash 1.6s ease; }
+  details.faq summary { cursor: pointer; list-style: none; }
+  details.faq summary::-webkit-details-marker { display: none; }
+  details.faq[open] .faq-plus { transform: rotate(45deg); }
+  .faq-plus { transition: transform .25s ease; }
+  ::selection { background: #f59e0b; color: #1f2937; }
+  .axis-label { writing-mode: vertical-rl; transform: rotate(180deg); }
+</style>
+</head>
+<body id="top" class="text-slate-800 antialiased">
+
+<!-- STICKY HEADER -->
+<header class="no-print sticky top-0 z-50 bg-[#f4f1ea]/95 backdrop-blur border-b border-[#e3dccb]">
+  <div class="mx-auto max-w-6xl px-4 sm:px-6 py-3 flex items-center justify-between">
+    <a href="#top" class="flex items-center gap-2.5">
+      <svg width="34" height="34" viewBox="0 0 34 34" fill="none" aria-hidden="true">
+        <rect x="3" y="3" width="12" height="12" rx="3" fill="#2563eb"/>
+        <rect x="19" y="3" width="12" height="12" rx="3" fill="#10b981"/>
+        <rect x="3" y="19" width="12" height="12" rx="3" fill="#f59e0b"/>
+        <rect x="19" y="19" width="12" height="12" rx="3" fill="#cbd5e1"/>
+      </svg>
+      <span class="font-display text-2xl font-bold tracking-tight text-slate-900">Prioritix</span>
+    </a>
+    <nav class="flex items-center gap-5 text-sm font-semibold text-slate-700">
+      <a href="#top" class="hover:text-[#2563eb] transition">Home</a>
+      <a href="https://fixoraa.tech" class="hover:text-[#2563eb] transition">More Tools</a>
+    </nav>
+  </div>
+</header>
+
+<!-- HERO -->
+<section class="no-print">
+  <div class="mx-auto max-w-6xl px-4 sm:px-6 pt-10 pb-8 text-center">
+    <div class="inline-flex items-center gap-2 border border-[#2563eb]/40 bg-white/60 text-[#2563eb] text-xs font-bold uppercase tracking-[0.2em] rounded-full px-4 py-1.5 mb-5">
+      <span class="w-2 h-2 rounded-full bg-[#2563eb]"></span> Unlimited Free Usage
+    </div>
+    <h1 class="font-display text-4xl sm:text-5xl font-bold tracking-tight text-slate-900">The Eisenhower Matrix, <span class="text-[#2563eb]">planned for real life.</span></h1>
+    <p class="mt-4 text-slate-600 max-w-2xl mx-auto text-lg">Prioritix is a free priority matrix app: add tasks with urgency and importance sliders, drag them across the urgent important matrix, and let deadlines auto-escalate while your daily Top-3 focus list builds itself.</p>
+    <a href="#tool" class="mt-6 inline-block bg-[#2563eb] hover:bg-blue-700 text-white font-semibold rounded-xl px-7 py-3 transition shadow-lg shadow-blue-600/20">Start Planning Free</a>
+  </div>
+</section>
+
+<!-- TOP AD -->
+<div class="no-print mx-auto max-w-6xl px-4 sm:px-6 pt-4" role="complementary" aria-label="Advertisement">
+  <div class="mx-auto text-center" style="max-width:728px">
+    <span class="block text-[10px] tracking-[0.18em] uppercase text-slate-400 mb-1.5">Advertisement</span>
+    <div class="flex justify-center overflow-hidden">
+      <div class="origin-top scale-[0.44] sm:scale-100 shrink-0">
+        <script>
+          atOptions = { 'key' : '4e68ac77881c17fe128a46565d9a4e8c', 'format' : 'iframe', 'height' : 90, 'width' : 728, 'params' : {} };
+        </script>
+        <script src="https://www.highrevenueformat.com/4e68ac77881c17fe128a46565d9a4e8c/invoke.js"></script>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- TOOL -->
+<main id="tool" class="mx-auto max-w-6xl px-4 sm:px-6 py-8">
+  <div id="escalateBanner" class="hidden mb-5 rounded-xl border border-[#f59e0b]/60 bg-amber-50 px-4 py-3 text-sm font-medium text-amber-900"></div>
+
+  <div class="grid gap-6 lg:grid-cols-3">
+    <!-- LEFT: add task + matrix board -->
+    <div class="lg:col-span-2 space-y-6">
+      <!-- ADD TASK -->
+      <form id="taskForm" class="paper-card rounded-2xl p-5 sm:p-6">
+        <h2 class="font-display text-xl font-bold text-slate-900">Add a task</h2>
+        <p class="text-sm text-slate-500 mt-1">Slide urgency and importance — Prioritix suggests the right quadrant instantly.</p>
+        <div class="mt-4">
+          <label for="taskTitle" class="text-sm font-semibold text-slate-700">Task name</label>
+          <input id="taskTitle" type="text" maxlength="140" placeholder="e.g. Finish the quarterly report" class="mt-1 w-full bg-white border border-[#e3dccb] rounded-xl px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#2563eb]/40 focus:border-[#2563eb]">
+        </div>
+        <div class="mt-4 grid sm:grid-cols-2 gap-5">
+          <div>
+            <div class="flex items-center justify-between">
+              <label for="urgencyRange" class="text-sm font-semibold text-slate-700">Urgency</label>
+              <span id="urgencyVal" class="text-sm font-bold text-[#2563eb]">5 / 10</span>
+            </div>
+            <input id="urgencyRange" type="range" min="0" max="10" step="1" value="5" class="w-full mt-1">
+            <p class="text-xs text-slate-400 mt-0.5">How time-critical is it?</p>
+          </div>
+          <div>
+            <div class="flex items-center justify-between">
+              <label for="importanceRange" class="text-sm font-semibold text-slate-700">Importance</label>
+              <span id="importanceVal" class="text-sm font-bold text-[#2563eb]">5 / 10</span>
+            </div>
+            <input id="importanceRange" type="range" min="0" max="10" step="1" value="5" class="w-full mt-1">
+            <p class="text-xs text-slate-400 mt-0.5">How much does it matter?</p>
+          </div>
+        </div>
+        <div class="mt-4 grid sm:grid-cols-2 gap-4 items-end">
+          <div>
+            <label for="dueDate" class="text-sm font-semibold text-slate-700">Due date <span class="text-slate-400 font-normal">(optional)</span></label>
+            <input id="dueDate" type="date" class="mt-1 w-full bg-white border border-[#e3dccb] rounded-xl px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#2563eb]/40 focus:border-[#2563eb]">
+          </div>
+          <div id="quadrantSuggest" class="rounded-xl bg-[#eff6ff] border border-[#2563eb]/25 px-4 py-3 text-sm">
+            <span class="text-slate-500">Suggested quadrant:</span>
+            <strong class="text-[#2563eb]">Q1 · Do First</strong>
+          </div>
+        </div>
+        <button id="btnAddTask" type="submit" class="mt-4 w-full sm:w-auto bg-[#2563eb] hover:bg-blue-700 text-white font-semibold rounded-xl px-8 py-2.5 transition shadow-lg shadow-blue-600/20">Add Task</button>
+      </form>
+
+      <!-- MATRIX BOARD -->
+      <section aria-label="Eisenhower matrix board">
+        <div class="flex items-center justify-between mb-3">
+          <h2 class="font-display text-xl font-bold text-slate-900">Your matrix board</h2>
+          <button id="btnClearDone" class="text-sm font-semibold text-slate-500 hover:text-red-600 transition">Clear completed</button>
+        </div>
+        <div id="matrixBoard" class="grid gap-4 sm:grid-cols-2">
+          <!-- Q1 -->
+          <div class="paper-card quad-drop rounded-2xl overflow-hidden" data-quad="Q1">
+            <div class="px-4 py-3 border-t-4" style="border-color:#2563eb">
+              <div class="flex items-center justify-between">
+                <h3 class="font-display font-bold text-slate-900">Q1 · Do First</h3>
+                <span class="quad-count text-xs font-bold bg-[#2563eb]/10 text-[#2563eb] rounded-full px-2.5 py-0.5">0</span>
+              </div>
+              <p class="text-xs text-slate-500 mt-0.5">Urgent + Important — do these now.</p>
+            </div>
+            <div id="quad-Q1" class="quad-list min-h-[120px] px-3 pb-4 pt-1 space-y-2"></div>
+          </div>
+          <!-- Q2 -->
+          <div class="paper-card quad-drop rounded-2xl overflow-hidden" data-quad="Q2">
+            <div class="px-4 py-3 border-t-4" style="border-color:#10b981">
+              <div class="flex items-center justify-between">
+                <h3 class="font-display font-bold text-slate-900">Q2 · Schedule</h3>
+                <span class="quad-count text-xs font-bold bg-emerald-500/10 text-emerald-700 rounded-full px-2.5 py-0.5">0</span>
+              </div>
+              <p class="text-xs text-slate-500 mt-0.5">Important, not urgent — plan time for these.</p>
+            </div>
+            <div id="quad-Q2" class="quad-list min-h-[120px] px-3 pb-4 pt-1 space-y-2"></div>
+          </div>
+          <!-- Q3 -->
+          <div class="paper-card quad-drop rounded-2xl overflow-hidden" data-quad="Q3">
+            <div class="px-4 py-3 border-t-4" style="border-color:#f59e0b">
+              <div class="flex items-center justify-between">
+                <h3 class="font-display font-bold text-slate-900">Q3 · Delegate</h3>
+                <span class="quad-count text-xs font-bold bg-amber-500/10 text-amber-700 rounded-full px-2.5 py-0.5">0</span>
+              </div>
+              <p class="text-xs text-slate-500 mt-0.5">Urgent, not important — hand off or batch.</p>
+            </div>
+            <div id="quad-Q3" class="quad-list min-h-[120px] px-3 pb-4 pt-1 space-y-2"></div>
+          </div>
+          <!-- Q4 -->
+          <div class="paper-card quad-drop rounded-2xl overflow-hidden" data-quad="Q4">
+            <div class="px-4 py-3 border-t-4" style="border-color:#9ca3af">
+              <div class="flex items-center justify-between">
+                <h3 class="font-display font-bold text-slate-900">Q4 · Eliminate</h3>
+                <span class="quad-count text-xs font-bold bg-slate-400/10 text-slate-600 rounded-full px-2.5 py-0.5">0</span>
+              </div>
+              <p class="text-xs text-slate-500 mt-0.5">Neither — drop or park these.</p>
+            </div>
+            <div id="quad-Q4" class="quad-list min-h-[120px] px-3 pb-4 pt-1 space-y-2"></div>
+          </div>
+        </div>
+        <p class="text-xs text-slate-400 mt-2">Tip: drag any task card into a different quadrant to override its placement. Everything saves automatically in your browser.</p>
+      </section>
+    </div>
+
+    <!-- RIGHT: top-3 + weekly stats -->
+    <div class="space-y-6">
+      <!-- TOP 3 -->
+      <section class="paper-card rounded-2xl p-5" aria-label="Daily Top-3 focus list">
+        <div class="flex items-center gap-2">
+          <span class="inline-flex items-center justify-center w-8 h-8 rounded-lg bg-[#f59e0b]/15 text-[#f59e0b] font-display font-bold">3</span>
+          <h2 class="font-display text-xl font-bold text-slate-900">Today's Top-3 Focus</h2>
+        </div>
+        <p class="text-sm text-slate-500 mt-1">Your three highest-priority tasks, ranked automatically.</p>
+        <ol id="top3List" class="mt-4 space-y-2.5"></ol>
+      </section>
+
+      <!-- WEEKLY STATS -->
+      <section class="paper-card rounded-2xl p-5" aria-label="Weekly planned versus completed stats">
+        <h2 class="font-display text-xl font-bold text-slate-900">This week: planned vs done</h2>
+        <p class="text-sm text-slate-500 mt-1">Log each day's plan and completion to see your follow-through.</p>
+        <div class="mt-4 grid grid-cols-2 gap-3">
+          <div>
+            <label for="plannedInput" class="text-xs font-semibold text-slate-600">Planned today</label>
+            <input id="plannedInput" type="number" min="0" max="100" class="mt-1 w-full bg-white border border-[#e3dccb] rounded-xl px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#2563eb]/40">
+          </div>
+          <div>
+            <label for="doneInput" class="text-xs font-semibold text-slate-600">Completed today</label>
+            <input id="doneInput" type="number" min="0" max="100" class="mt-1 w-full bg-white border border-[#e3dccb] rounded-xl px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#2563eb]/40">
+          </div>
+        </div>
+        <button id="btnLogDay" class="mt-3 w-full bg-[#2563eb] hover:bg-blue-700 text-white text-sm font-semibold rounded-xl px-4 py-2.5 transition">Log Today</button>
+        <div id="statsBoard" class="mt-4"></div>
+        <div class="mt-3 flex items-center justify-between text-sm">
+          <span class="text-slate-500">Completion rate</span>
+          <strong id="statRate" class="font-display text-lg text-[#2563eb]">—</strong>
+        </div>
+        <p class="text-xs text-slate-400 mt-1">Open tasks: <span id="statPlanned" class="font-semibold text-slate-600">0</span> · Completed (kept): <span id="statCompleted" class="font-semibold text-slate-600">0</span></p>
+      </section>
+    </div>
+  </div>
+</main>
+
+<!-- BOTTOM AD -->
+<div class="no-print mx-auto max-w-6xl px-4 sm:px-6 pb-4" role="complementary" aria-label="Advertisement">
+  <div class="mx-auto text-center" style="max-width:728px">
+    <span class="block text-[10px] tracking-[0.18em] uppercase text-slate-400 mb-1.5">Advertisement</span>
+    <div class="flex justify-center overflow-hidden">
+      <script async src="https://js.wpadmngr.com/static/adManager.js" data-admpid="464498"></script>
+    </div>
+  </div>
+</div>
+
+<!-- SEO ARTICLE -->
+<div class="mx-auto max-w-6xl px-4 sm:px-6 pb-12">
+  <article id="seo-article" class="paper-card rounded-2xl p-6 sm:p-10 prose prose-slate max-w-none">
+    <h2 class="font-display text-2xl sm:text-3xl font-bold text-slate-900">The Complete Guide to the Eisenhower Matrix: Plan Priorities That Actually Get Done</h2>
+    <p class="text-slate-600">Most to-do lists fail for a simple reason: they treat every task as equally important. A dentist appointment, a board presentation, and answering a random group chat all sit in the same flat list, so you end up reacting to whatever shouts loudest. An eisenhower matrix online tool like Prioritix fixes that by forcing every task through two questions before it earns a place in your day: how urgent is this, and how important is it? The answers place each task into one of four quadrants, and each quadrant comes with its own playbook. The result is a priority matrix app that turns a chaotic list into a calm plan in minutes.</p>
+
+    <h3 class="font-display text-xl font-bold text-slate-900 mt-8">What is the Eisenhower Matrix?</h3>
+    <p class="text-slate-600">The matrix is named after Dwight D. Eisenhower, the 34th U.S. president and former Supreme Allied Commander, who was famous for his productivity under pressure. His observation — "What is important is seldom urgent and what is urgent is seldom important" — became the backbone of this method. Management thinker Stephen Covey later popularized it in <em>The 7 Habits of Highly Effective People</em>, where it appears as the Time Management Matrix. The idea is a simple two-by-two grid: urgency on one axis, importance on the other, creating four boxes that sort your entire workload.</p>
+    <p class="text-slate-600">An urgent important matrix planner does not try to make you work more hours. It makes the hours you already work go to the right things. Studies of time management consistently find that people over-invest in urgent work at the expense of important work, because urgency is loud and importance is quiet. The matrix is a defense against that bias: once a task is visibly sitting in the "Schedule" quadrant, it is much harder to ignore for another week.</p>
+
+    <h3 class="font-display text-xl font-bold text-slate-900 mt-8">The four quadrants, explained</h3>
+    <p class="text-slate-600"><strong>Q1 — Do First (urgent + important).</strong> These are the tasks with real consequences and real deadlines: a client deliverable due today, a server outage, a medical emergency, a tax filing deadline. Q1 work deserves your immediate attention, but here is the trap — a healthy week should have relatively few Q1 items. If your entire life lives in Q1, you are not prioritizing; you are firefighting. Firefighting usually means Q2 tasks were neglected until their deadlines arrived, which is exactly why the next quadrant matters most.</p>
+    <p class="text-slate-600"><strong>Q2 — Schedule (important, not urgent).</strong> This is the quadrant of the long game: exercise, deep work on your biggest project, learning a new skill, maintaining relationships, strategic planning, preventive health checkups. Nothing in Q2 screams for attention, which is why it gets postponed — and why postponed Q2 tasks become tomorrow's Q1 crises. High performers deliberately protect Q2 time on their calendars, because this quadrant is where careers, health, and meaningful goals are actually built. An eisenhower matrix online tool earns its keep here: it keeps Q2 visible so urgency cannot silently eat it.</p>
+    <p class="text-slate-600"><strong>Q3 — Delegate (urgent, not important).</strong> Interruptions, most meetings, other people's "quick favors," routine emails, and notifications live here. They feel pressing but contribute little to your goals. The correct response is to delegate, batch, automate, or politely decline. A useful test: if the task disappeared tomorrow, would your goals change? If not, it is Q3. Many professionals discover that half their "busy" day was Q3 work in disguise — and reclaiming even one hour a day from this quadrant transforms a week.</p>
+    <p class="text-slate-600"><strong>Q4 — Eliminate (neither urgent nor important).</strong> Endless scrolling, rewatching shows you do not even enjoy, busywork, perfectionist polishing of something nobody will see. Q4 is not always evil — everyone needs rest and play — but it should be a conscious choice, not a default. When you can see five Q4 tasks staring at you from the matrix, deleting them feels satisfying rather than guilty.</p>
+
+    <h3 class="font-display text-xl font-bold text-slate-900 mt-8">Urgent vs. important: how to tell them apart</h3>
+    <p class="text-slate-600">The hardest part of using a priority matrix app is scoring honestly. Urgency is about time: does this demand action soon, or does someone expect a fast response? Importance is about impact: does this move you toward your goals, values, or long-term wellbeing? Two questions cut through the fog. First: "What happens if this is late?" — a real penalty means urgent. Second: "Will this matter in a year?" — a yes means important. A ringing phone is urgent but rarely important; writing your will is important but never urgent.</p>
+    <p class="text-slate-600">Beginners consistently overrate urgency because urgency arrives with adrenaline and social pressure. A practical calibration trick: imagine each task on a 0–10 scale for both dimensions, like the sliders in Prioritix. Anything you score 5 or above counts as urgent or important respectively. Forcing a number breaks the habit of marking everything "urgent," and over a few weeks your scores become remarkably consistent.</p>
+
+    <h3 class="font-display text-xl font-bold text-slate-900 mt-8">How to use Prioritix as your daily urgent important matrix planner</h3>
+    <p class="text-slate-600">Start each morning with a two-minute brain dump: type every task on your mind into Prioritix, set the urgency and importance sliders, and watch the quadrant suggestion appear as you drag. Add a due date wherever one exists — this powers the auto-escalation engine. Then look at the matrix board. Your Q1 column is today's battlefield; your Q2 column is the week's promise. Drag anything that looks misplaced into the right quadrant — the override is yours, and the tool remembers it.</p>
+    <p class="text-slate-600">Next, check the auto-generated Top-3 focus list. It ranks every open task by quadrant weight, urgency, importance, and due-date proximity, so the three items at the top are the three that most deserve your deep-work hours. Write them on a sticky note or just keep the tab open; the rule is simple — do not start a fourth task until those three are done or deliberately deferred. This single habit beats most productivity systems because it limits work-in-progress to what a human brain can actually hold.</p>
+    <p class="text-slate-600">The feature most users grow to love is Q2-to-Q1 auto-escalation. A Q2 task with a due date quietly sits in "Schedule" — until the deadline is two days away, at which point Prioritix promotes it to "Do First" and flags it as escalated. No more discovering on Friday evening that the report due Monday was hiding in your long-term list. Escalation is the safety net that lets you trust the system instead of anxiously re-checking everything.</p>
+
+    <h3 class="font-display text-xl font-bold text-slate-900 mt-8">The weekly review: planned vs. completed</h3>
+    <p class="text-slate-600">Daily prioritization wins days; weekly review wins months. Prioritix includes a simple planned-vs-completed tracker: each evening, log how many tasks you planned and how many you finished. Over the week you will see a bar chart of follow-through and a completion rate. Do not aim for 100% — a rate around 70–80% means you are planning ambitiously but realistically. A rate stuck near 40% is a signal, not a failure: it usually means too many Q1 and Q3 tasks are crowding out the Q2 work that would prevent next week's emergencies.</p>
+    <p class="text-slate-600">Pair the weekly review with a ten-minute quadrant audit. Ask three questions: Which Q2 tasks kept slipping, and can they get calendar blocks? Which Q3 tasks can be delegated, batched, or declined next week? Which Q4 tasks can simply be deleted? Users who do this review consistently report the same surprise — the matrix slowly empties, because they stop adding tasks they would previously have added on autopilot.</p>
+
+    <h3 class="font-display text-xl font-bold text-slate-900 mt-8">Common mistakes to avoid</h3>
+    <p class="text-slate-600">The classic beginner error is putting everything in Q1. If more than a third of your tasks are "urgent and important," your scoring is too generous — recalibrate by forcing the 0–10 numbers. The second mistake is the opposite: treating Q2 as optional because it lacks a deadline. Remember, every Q1 crisis was once a Q2 task with plenty of time. The third mistake is never delegating Q3: if you cannot delegate to a person, delegate to a system — templates, automations, office hours, and "no" are all forms of delegation.</p>
+    <p class="text-slate-600">Another subtle trap is confusing importance with someone else's urgency. Your manager's emergency is not automatically your Q1; if it does not affect your goals and has no real deadline for you, it may be Q3 — something to handle quickly and cheaply, not something to sacrifice deep work for. The matrix works best when it reflects your priorities, not everyone else's.</p>
+
+    <h3 class="font-display text-xl font-bold text-slate-900 mt-8">Who uses the Eisenhower Matrix?</h3>
+    <p class="text-slate-600">Students use it to separate exam prep (Q2 until the date nears, then Q1) from group-chat drama (Q3/Q4). Freelancers use it to protect client delivery (Q1) and business development (Q2) from admin trivia (Q3). Managers use it to run teams: they teach direct reports to bring Q2 proposals instead of Q1 surprises. Parents use it to defend sleep and exercise (Q2) against the endless Q3 of household logistics. Because the method needs no training and no jargon, it works as well for a teenager's homework as for a CEO's quarter.</p>
+    <p class="text-slate-600">Whether you are a student, freelancer, manager, or simply someone tired of ending busy days with nothing important done, an eisenhower matrix online planner is one of the highest-leverage habits you can adopt. Prioritix keeps it free, private — everything stays in your browser — and fast enough to use every single morning. Add your tasks, trust the quadrants, work your Top-3, and review your week. That is the whole system, and it is enough.</p>
+  </article>
+
+  <!-- FAQs -->
+  <section class="mt-8" aria-label="Frequently asked questions">
+    <h2 class="font-display text-2xl font-bold text-slate-900 mb-4">Frequently Asked Questions</h2>
+    <div class="space-y-3">
+      <details class="faq paper-card rounded-xl px-5 py-4">
+        <summary class="flex items-center justify-between font-semibold text-slate-900">What is the Eisenhower Matrix?<span class="faq-plus text-[#2563eb] text-xl font-bold">+</span></summary>
+        <p class="mt-2 text-slate-600 text-sm">The Eisenhower Matrix is a prioritization framework that sorts tasks into four quadrants based on urgency and importance: Q1 Do First (urgent + important), Q2 Schedule (important, not urgent), Q3 Delegate (urgent, not important), and Q4 Eliminate (neither). It is named after President Dwight D. Eisenhower and popularized by Stephen Covey. Prioritix implements it as a free interactive online tool with sliders, drag-and-drop, and auto-escalation.</p>
+      </details>
+      <details class="faq paper-card rounded-xl px-5 py-4">
+        <summary class="flex items-center justify-between font-semibold text-slate-900">How do I decide if a task is urgent or important?<span class="faq-plus text-[#2563eb] text-xl font-bold">+</span></summary>
+        <p class="mt-2 text-slate-600 text-sm">Ask two questions. "What happens if this is late?" — a real penalty means it is urgent. "Will this matter in a year?" — a yes means it is important. In Prioritix, rate each on a 0–10 scale: 5 or above counts as urgent or important. Most people overrate urgency at first, so forcing a number keeps your scoring honest and your quadrants accurate.</p>
+      </details>
+      <details class="faq paper-card rounded-xl px-5 py-4">
+        <summary class="flex items-center justify-between font-semibold text-slate-900">What is the difference between Q1 and Q2 tasks?<span class="faq-plus text-[#2563eb] text-xl font-bold">+</span></summary>
+        <p class="mt-2 text-slate-600 text-sm">Both are important, but only Q1 is also urgent — deadlines, crises, and anything with real consequences happening soon. Q2 tasks are important without a pressing deadline: exercise, deep work, learning, planning, relationships. Q2 is where long-term success is built, and neglected Q2 tasks eventually become Q1 emergencies — which is why Prioritix auto-escalates Q2 tasks to Q1 as their due dates approach.</p>
+      </details>
+      <details class="faq paper-card rounded-xl px-5 py-4">
+        <summary class="flex items-center justify-between font-semibold text-slate-900">Is Prioritix free? Do I need an account?<span class="faq-plus text-[#2563eb] text-xl font-bold">+</span></summary>
+        <p class="mt-2 text-slate-600 text-sm">Yes, Prioritix is completely free with unlimited usage — no signup, no paywall, no watermark. Everything runs in your browser and your tasks are stored in your browser's local storage, so there is no account to create and no data sent to any server.</p>
+      </details>
+      <details class="faq paper-card rounded-xl px-5 py-4">
+        <summary class="flex items-center justify-between font-semibold text-slate-900">Does Prioritix work on mobile phones?<span class="faq-plus text-[#2563eb] text-xl font-bold">+</span></summary>
+        <p class="mt-2 text-slate-600 text-sm">Yes. The matrix board, sliders, Top-3 list, and weekly stats are fully responsive and work on phones, tablets, and desktops. On touch devices you can drag task cards between quadrants just like on desktop, and the layout stacks vertically for easy one-handed use.</p>
+      </details>
+      <details class="faq paper-card rounded-xl px-5 py-4">
+        <summary class="flex items-center justify-between font-semibold text-slate-900">Where is my data stored? Is it private?<span class="faq-plus text-[#2563eb] text-xl font-bold">+</span></summary>
+        <p class="mt-2 text-slate-600 text-sm">All your tasks and weekly stats are stored only in your own browser via localStorage. Nothing is uploaded, tracked, or shared — there is no backend and no analytics on your tasks. Clearing your browser data will remove them, so treat your regular device as the home of your plans.</p>
+      </details>
+    </div>
+  </section>
+</div>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "What is the Eisenhower Matrix?",
+      "acceptedAnswer": { "@type": "Answer", "text": "The Eisenhower Matrix is a prioritization framework that sorts tasks into four quadrants based on urgency and importance: Q1 Do First (urgent + important), Q2 Schedule (important, not urgent), Q3 Delegate (urgent, not important), and Q4 Eliminate (neither). It is named after President Dwight D. Eisenhower and popularized by Stephen Covey." }
+    },
+    {
+      "@type": "Question",
+      "name": "How do I decide if a task is urgent or important?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Ask two questions. 'What happens if this is late?' — a real penalty means it is urgent. 'Will this matter in a year?' — a yes means it is important. Rate each on a 0–10 scale: 5 or above counts as urgent or important." }
+    },
+    {
+      "@type": "Question",
+      "name": "What is the difference between Q1 and Q2 tasks?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Both are important, but only Q1 is also urgent — deadlines, crises, and anything with real consequences happening soon. Q2 tasks are important without a pressing deadline: exercise, deep work, learning, planning, relationships. Neglected Q2 tasks eventually become Q1 emergencies." }
+    },
+    {
+      "@type": "Question",
+      "name": "Is Prioritix free? Do I need an account?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Yes, Prioritix is completely free with unlimited usage — no signup, no paywall, no watermark. Everything runs in your browser and your tasks are stored in your browser's local storage." }
+    },
+    {
+      "@type": "Question",
+      "name": "Does Prioritix work on mobile phones?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Yes. The matrix board, sliders, Top-3 list, and weekly stats are fully responsive and work on phones, tablets, and desktops, with drag-and-drop between quadrants on touch devices." }
+    },
+    {
+      "@type": "Question",
+      "name": "Where is my data stored? Is it private?",
+      "acceptedAnswer": { "@type": "Answer", "text": "All your tasks and weekly stats are stored only in your own browser via localStorage. Nothing is uploaded, tracked, or shared — there is no backend and no analytics on your tasks." }
+    }
+  ]
+}
+</script>
+
+<footer class="no-print border-t border-[#e3dccb]">
+  <div class="mx-auto max-w-6xl px-4 sm:px-6 py-6 flex flex-col sm:flex-row items-center justify-between gap-3 text-sm text-slate-500">
+    <span class="font-display font-bold text-slate-800">Prioritix</span>
+    <nav class="flex items-center gap-5 font-semibold">
+      <a href="#top" class="hover:text-[#2563eb] transition">Home</a>
+      <a href="https://fixoraa.tech" class="hover:text-[#2563eb] transition">More Tools</a>
+    </nav>
+  </div>
+</footer>
+
+<!-- PURE LOGIC LIB (inlined by build script) -->
+<script id="v3-prioritix-priority-matrix-lib">
+/* Prioritix lib — pure functions only. No document, no window, no localStorage,
+   no network. Evaluated by the test harness via new Function() and inlined
+   into the shipped HTML at build time. */
+var Prioritix = (function () {
+  'use strict';
+
+  function isNum(x) {
+    return typeof x === 'number' && isFinite(x);
+  }
+
+  function clampN(x, lo, hi) {
+    return Math.max(lo, Math.min(hi, x));
+  }
+
+  /* ---- Quadrant metadata ---- */
+  var QUADRANT_IDS = ['Q1', 'Q2', 'Q3', 'Q4'];
+
+  var QUADRANT_INFO = {
+    Q1: { id: 'Q1', name: 'Do First', tagline: 'Urgent + Important', color: '#2563eb',
+          hint: 'Do these now — deadlines, crises, critical work.' },
+    Q2: { id: 'Q2', name: 'Schedule', tagline: 'Important, not urgent', color: '#10b981',
+          hint: 'Plan these — goals, health, deep work, relationships.' },
+    Q3: { id: 'Q3', name: 'Delegate', tagline: 'Urgent, not important', color: '#f59e0b',
+          hint: 'Hand off, batch or timebox — interruptions and requests.' },
+    Q4: { id: 'Q4', name: 'Eliminate', tagline: 'Neither urgent nor important', color: '#9ca3af',
+          hint: 'Drop or park these — low-value busywork.' }
+  };
+
+  /* Q2 tasks whose due date is within this many days auto-escalate to Q1. */
+  var ESCALATION_DAYS = 2;
+
+  function isQuadrantId(id) {
+    return QUADRANT_IDS.indexOf(id) !== -1;
+  }
+
+  function quadrantName(id) {
+    return isQuadrantId(id) ? QUADRANT_INFO[id].name : '';
+  }
+
+  /* ---- Urgency/importance -> quadrant classifier ----
+     Scales are 0-10. A task is "urgent" at >= 5 and "important" at >= 5.
+     (urgent>=5, important>=5) -> Q1; (urgent<5, important>=5) -> Q2;
+     (urgent>=5, important<5) -> Q3; else Q4. */
+  function classify(urgency, importance) {
+    if (!isNum(urgency) || !isNum(importance)) return null;
+    var u = clampN(urgency, 0, 10);
+    var im = clampN(importance, 0, 10);
+    if (u >= 5 && im >= 5) return 'Q1';
+    if (im >= 5) return 'Q2';
+    if (u >= 5) return 'Q3';
+    return 'Q4';
+  }
+
+  function validDateISO(s) {
+    return typeof s === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(s);
+  }
+
+  /* Whole days from today (local) to dueISO. 0 = today, 1 = tomorrow,
+     negative = overdue. Returns null for missing/invalid input. */
+  function daysUntil(dueISO, nowMs) {
+    if (!validDateISO(dueISO)) return null;
+    var now = isNum(nowMs) ? nowMs : Date.now();
+    var due = new Date(dueISO + 'T00:00:00');
+    if (isNaN(due.getTime())) return null;
+    var start = new Date(now);
+    start.setHours(0, 0, 0, 0);
+    return Math.round((due.getTime() - start.getTime()) / 86400000);
+  }
+
+  /* Human label for a due date relative to now: "today", "tomorrow",
+     "in 3 days", "overdue by 2 days", "no due date". */
+  function dueLabel(dueISO, nowMs) {
+    var d = daysUntil(dueISO, nowMs);
+    if (d === null) return 'no due date';
+    if (d === 0) return 'due today';
+    if (d === 1) return 'due tomorrow';
+    if (d > 1) return 'due in ' + d + ' days';
+    if (d === -1) return 'overdue by 1 day';
+    return 'overdue by ' + Math.abs(d) + ' days';
+  }
+
+  var idCounter = 0;
+  function nextId() {
+    idCounter += 1;
+    return 't' + Date.now().toString(36) + '-' + idCounter;
+  }
+
+  /* Validate + normalize a task input object. Returns a task object or
+     { error } when the input is unusable. */
+  function normalizeTask(input) {
+    input = input || {};
+    var title = typeof input.title === 'string' ? input.title.trim() : '';
+    if (!title) return { error: 'Give the task a name first.' };
+    var u = isNum(input.urgency) ? clampN(input.urgency, 0, 10) : NaN;
+    var im = isNum(input.importance) ? clampN(input.importance, 0, 10) : NaN;
+    if (!isNum(u) || !isNum(im)) {
+      return { error: 'Urgency and importance must be numbers from 0 to 10.' };
+    }
+    var due = typeof input.due === 'string' ? input.due.trim() : '';
+    if (due && !validDateISO(due)) {
+      return { error: 'Due date must be YYYY-MM-DD.' };
+    }
+    return {
+      id: (typeof input.id === 'string' && input.id) ? input.id : nextId(),
+      title: title.slice(0, 140),
+      urgency: Math.round(u * 10) / 10,
+      importance: Math.round(im * 10) / 10,
+      due: due,
+      manualQuadrant: isQuadrantId(input.manualQuadrant) ? input.manualQuadrant : '',
+      completed: !!input.completed,
+      createdAt: isNum(input.createdAt) ? input.createdAt : Date.now(),
+      doneAt: isNum(input.doneAt) ? input.doneAt : 0
+    };
+  }
+
+  /* Effective quadrant after the Q2->Q1 auto-escalation rule:
+     a non-completed Q2 task due within ESCALATION_DAYS days (or overdue)
+     is treated as Q1. Manual drag placement is respected first. */
+  function effectiveQuadrant(task, nowMs) {
+    if (!task) return 'Q4';
+    var base = isQuadrantId(task.manualQuadrant)
+      ? task.manualQuadrant
+      : (classify(task.urgency, task.importance) || 'Q4');
+    if (base === 'Q2' && !task.completed) {
+      var d = daysUntil(task.due, nowMs);
+      if (d !== null && d <= ESCALATION_DAYS) return 'Q1';
+    }
+    return base;
+  }
+
+  /* True when the auto-escalation rule moved this task from Q2 to Q1. */
+  function escalated(task, nowMs) {
+    if (!task || task.completed) return false;
+    var base = isQuadrantId(task.manualQuadrant)
+      ? task.manualQuadrant
+      : (classify(task.urgency, task.importance) || 'Q4');
+    if (base !== 'Q2') return false;
+    var d = daysUntil(task.due, nowMs);
+    return d !== null && d <= ESCALATION_DAYS;
+  }
+
+  var QUADRANT_WEIGHT = { Q1: 400, Q2: 300, Q3: 200, Q4: 100 };
+
+  /* Priority score: higher = work on this sooner. Quadrant dominates,
+     then urgency/importance, then due-date proximity (overdue and soon
+     due dates get a boost). Completed tasks score 0. */
+  function taskScore(task, nowMs) {
+    if (!task || task.completed) return 0;
+    var q = effectiveQuadrant(task, nowMs);
+    var u = isNum(task.urgency) ? clampN(task.urgency, 0, 10) : 0;
+    var im = isNum(task.importance) ? clampN(task.importance, 0, 10) : 0;
+    var dueBoost = 0;
+    var d = daysUntil(task.due, nowMs);
+    if (d !== null) dueBoost = clampN(7 - d, 0, 10) * 5;
+    var score = (QUADRANT_WEIGHT[q] || 0) + u * 6 + im * 6 + dueBoost;
+    return Math.round(score * 10) / 10;
+  }
+
+  /* Daily Top-3 focus list: the 3 highest-scoring non-completed tasks.
+     Ties break by nearest due date, then oldest task first. */
+  function pickTop3(tasks, nowMs) {
+    var list = Array.isArray(tasks) ? tasks : [];
+    var scored = [];
+    for (var i = 0; i < list.length; i++) {
+      var t = list[i];
+      if (!t || t.completed) continue;
+      scored.push({
+        task: t,
+        score: taskScore(t, nowMs),
+        quadrant: effectiveQuadrant(t, nowMs),
+        dueIn: daysUntil(t.due, nowMs)
+      });
+    }
+    scored.sort(function (a, b) {
+      if (b.score !== a.score) return b.score - a.score;
+      var da = a.dueIn === null ? 9999 : a.dueIn;
+      var db = b.dueIn === null ? 9999 : b.dueIn;
+      if (da !== db) return da - db;
+      return (a.task.createdAt || 0) - (b.task.createdAt || 0);
+    });
+    return scored.slice(0, 3);
+  }
+
+  /* Drag a task into a quadrant: returns a new task with the manual
+     override set, or { error } for bad input. */
+  function reassignQuadrant(task, quadrantId) {
+    if (!task) return { error: 'No task to move.' };
+    if (!isQuadrantId(quadrantId)) return { error: 'Unknown quadrant: ' + quadrantId };
+    var copy = {};
+    for (var k in task) {
+      if (Object.prototype.hasOwnProperty.call(task, k)) copy[k] = task[k];
+    }
+    copy.manualQuadrant = quadrantId;
+    return copy;
+  }
+
+  /* Toggle completion. Returns a new task object (or { error }). */
+  function setCompleted(task, done, nowMs) {
+    if (!task) return { error: 'No task to update.' };
+    var now = isNum(nowMs) ? nowMs : Date.now();
+    var copy = {};
+    for (var k in task) {
+      if (Object.prototype.hasOwnProperty.call(task, k)) copy[k] = task[k];
+    }
+    copy.completed = !!done;
+    copy.doneAt = done ? now : 0;
+    return copy;
+  }
+
+  /* Remove completed tasks. Returns a new array. */
+  function clearCompleted(tasks) {
+    var list = Array.isArray(tasks) ? tasks : [];
+    var out = [];
+    for (var i = 0; i < list.length; i++) {
+      if (list[i] && !list[i].completed) out.push(list[i]);
+    }
+    return out;
+  }
+
+  /* Count tasks per effective quadrant (non-completed only). */
+  function quadrantCounts(tasks, nowMs) {
+    var counts = { Q1: 0, Q2: 0, Q3: 0, Q4: 0 };
+    var list = Array.isArray(tasks) ? tasks : [];
+    for (var i = 0; i < list.length; i++) {
+      var t = list[i];
+      if (!t || t.completed) continue;
+      var q = effectiveQuadrant(t, nowMs);
+      if (isQuadrantId(q)) counts[q] += 1;
+    }
+    return counts;
+  }
+
+  /* ---- Weekly planned-vs-completed stats (stored in localStorage by the UI).
+     entries: [{ date: 'YYYY-MM-DD', planned: n, completed: n }] ---- */
+
+  function upsertWeekDay(entries, date, planned, completed) {
+    var days = (Array.isArray(entries) ? entries : []).filter(function (e) {
+      return e && validDateISO(e.date) && e.date !== date;
+    });
+    if (validDateISO(date)) {
+      var p = isNum(planned) ? Math.max(0, Math.round(planned)) : 0;
+      var c = isNum(completed) ? Math.max(0, Math.round(completed)) : 0;
+      days.push({ date: date, planned: p, completed: Math.min(c, Math.max(p, c)) });
+    }
+    days.sort(function (a, b) {
+      return a.date < b.date ? -1 : (a.date > b.date ? 1 : 0);
+    });
+    return days.slice(-7);
+  }
+
+  function weekStats(entries) {
+    var days = (Array.isArray(entries) ? entries : []).filter(function (e) {
+      return e && validDateISO(e.date);
+    });
+    days.sort(function (a, b) {
+      return a.date < b.date ? -1 : (a.date > b.date ? 1 : 0);
+    });
+    days = days.slice(-7);
+    var totalPlanned = 0, totalCompleted = 0;
+    var perDay = [];
+    for (var i = 0; i < days.length; i++) {
+      var d = days[i];
+      var p = isNum(d.planned) ? Math.max(0, Math.round(d.planned)) : 0;
+      var c = isNum(d.completed) ? Math.max(0, Math.round(d.completed)) : 0;
+      totalPlanned += p;
+      totalCompleted += c;
+      perDay.push({
+        date: d.date,
+        planned: p,
+        completed: c,
+        rate: p > 0 ? Math.round(c / p * 1000) / 10 : 0
+      });
+    }
+    return {
+      days: perDay,
+      totalPlanned: totalPlanned,
+      totalCompleted: totalCompleted,
+      rate: totalPlanned > 0 ? Math.round(totalCompleted / totalPlanned * 1000) / 10 : 0
+    };
+  }
+
+  /* ---- Small date helpers ---- */
+  var MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
+                'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+  var WDAYS = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+
+  function formatDay(iso) {
+    var m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(iso || '');
+    if (!m) return iso || '';
+    var mo = parseInt(m[2], 10), da = parseInt(m[3], 10);
+    if (mo < 1 || mo > 12 || da < 1 || da > 31) return iso || '';
+    return MONTHS[mo - 1] + ' ' + da;
+  }
+
+  function weekdayShort(iso) {
+    if (!validDateISO(iso)) return '';
+    var d = new Date(iso + 'T00:00:00');
+    if (isNaN(d.getTime())) return '';
+    return WDAYS[d.getDay()];
+  }
+
+  function todayISO(nowMs) {
+    var d = new Date(isNum(nowMs) ? nowMs : Date.now());
+    var mo = d.getMonth() + 1, da = d.getDate();
+    return d.getFullYear() + '-' + (mo < 10 ? '0' : '') + mo + '-' + (da < 10 ? '0' : '') + da;
+  }
+
+  return {
+    QUADRANT_IDS: QUADRANT_IDS,
+    QUADRANT_INFO: QUADRANT_INFO,
+    ESCALATION_DAYS: ESCALATION_DAYS,
+    isQuadrantId: isQuadrantId,
+    quadrantName: quadrantName,
+    classify: classify,
+    daysUntil: daysUntil,
+    dueLabel: dueLabel,
+    normalizeTask: normalizeTask,
+    effectiveQuadrant: effectiveQuadrant,
+    escalated: escalated,
+    taskScore: taskScore,
+    pickTop3: pickTop3,
+    reassignQuadrant: reassignQuadrant,
+    setCompleted: setCompleted,
+    clearCompleted: clearCompleted,
+    quadrantCounts: quadrantCounts,
+    upsertWeekDay: upsertWeekDay,
+    weekStats: weekStats,
+    formatDay: formatDay,
+    weekdayShort: weekdayShort,
+    todayISO: todayISO
+  };
+})();
+
+</script>
+
+<!-- UI WIRING (uses the Prioritix pure lib above; DOM + localStorage only) -->
+<script>
+(function () {
+  'use strict';
+  var TASKS_KEY = 'prioritix-tasks-v1';
+  var WEEK_KEY = 'prioritix-week-v1';
+
+  function $(id) { return document.getElementById(id); }
+
+  function esc(s) {
+    return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) {
+      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+    });
+  }
+
+  function loadTasks() {
+    try {
+      var raw = JSON.parse(localStorage.getItem(TASKS_KEY) || '[]');
+      if (!Array.isArray(raw)) return [];
+      var out = [];
+      for (var i = 0; i < raw.length; i++) {
+        var t = Prioritix.normalizeTask(raw[i]);
+        if (!t.error) out.push(t);
+      }
+      return out;
+    } catch (e) { return []; }
+  }
+
+  function saveTasks() {
+    try { localStorage.setItem(TASKS_KEY, JSON.stringify(tasks)); } catch (e) {}
+  }
+
+  function loadWeek() {
+    try {
+      var raw = JSON.parse(localStorage.getItem(WEEK_KEY) || '[]');
+      return Array.isArray(raw) ? raw : [];
+    } catch (e) { return []; }
+  }
+
+  function saveWeek(w) {
+    try { localStorage.setItem(WEEK_KEY, JSON.stringify(w)); } catch (e) {}
+  }
+
+  var tasks = loadTasks();
+  var week = loadWeek();
+
+  /* ---------- add-task form ---------- */
+  function updateSuggest() {
+    var u = parseInt($('urgencyRange').value, 10);
+    var im = parseInt($('importanceRange').value, 10);
+    $('urgencyVal').textContent = u + ' / 10';
+    $('importanceVal').textContent = im + ' / 10';
+    var q = Prioritix.classify(u, im) || 'Q4';
+    var info = Prioritix.QUADRANT_INFO[q];
+    $('quadrantSuggest').innerHTML =
+      '<span class="text-slate-500">Suggested quadrant:</span> ' +
+      '<strong style="color:' + info.color + '">' + q + ' · ' + esc(info.name) + '</strong>' +
+      '<span class="block text-xs text-slate-400 mt-0.5">' + esc(info.hint) + '</span>';
+  }
+
+  $('urgencyRange').addEventListener('input', updateSuggest);
+  $('importanceRange').addEventListener('input', updateSuggest);
+
+  $('taskForm').addEventListener('submit', function (e) {
+    e.preventDefault();
+    var res = Prioritix.normalizeTask({
+      title: $('taskTitle').value,
+      urgency: parseInt($('urgencyRange').value, 10),
+      importance: parseInt($('importanceRange').value, 10),
+      due: $('dueDate').value
+    });
+    if (res.error) {
+      $('taskTitle').focus();
+      $('taskTitle').classList.add('ring-2', 'ring-red-400', 'border-red-400');
+      setTimeout(function () { $('taskTitle').classList.remove('ring-2', 'ring-red-400', 'border-red-400'); }, 1600);
+      return;
+    }
+    tasks.unshift(res);
+    saveTasks();
+    render();
+    $('taskTitle').value = '';
+    $('dueDate').value = '';
+    $('taskTitle').focus();
+  });
+
+  /* ---------- matrix rendering ---------- */
+  function taskCard(t, now) {
+    var q = Prioritix.effectiveQuadrant(t, now);
+    var info = Prioritix.QUADRANT_INFO[q];
+    var isEsc = Prioritix.escalated(t, now);
+    var d = Prioritix.daysUntil(t.due, now);
+    var dueHtml = '';
+    if (t.due) {
+      var dueCls = (d !== null && d <= 1) ? 'text-red-600 font-semibold' : 'text-slate-400';
+      dueHtml = '<span class="text-xs ' + dueCls + '">' + esc(Prioritix.dueLabel(t.due, now)) + '</span>';
+    }
+    var escTag = isEsc
+      ? '<span class="inline-block text-[10px] font-bold uppercase tracking-wide bg-amber-100 text-amber-800 rounded-full px-2 py-0.5">Escalated Q2→Q1</span>'
+      : '';
+    var faded = t.completed ? ' opacity-60' : '';
+    var strike = t.completed ? ' line-through text-slate-400' : ' text-slate-800';
+    return '' +
+      '<div class="task-card bg-white border border-[#e3dccb] rounded-xl p-3 shadow-sm' + faded + '" draggable="true" data-id="' + esc(t.id) + '" style="border-left:4px solid ' + info.color + '">' +
+        '<div class="flex items-start gap-2">' +
+          '<input type="checkbox" class="btn-done mt-1 h-4 w-4 shrink-0" data-id="' + esc(t.id) + '"' + (t.completed ? ' checked' : '') + ' aria-label="Mark done">' +
+          '<div class="min-w-0 flex-1">' +
+            '<p class="text-sm font-semibold' + strike + '">' + esc(t.title) + '</p>' +
+            '<div class="mt-1.5 flex flex-wrap items-center gap-x-2 gap-y-1">' +
+              '<span class="text-[11px] text-slate-400">U ' + t.urgency + ' · I ' + t.importance + '</span>' +
+              dueHtml + escTag +
+            '</div>' +
+          '</div>' +
+          '<button class="btn-del text-slate-300 hover:text-red-500 transition text-lg leading-none" data-id="' + esc(t.id) + '" aria-label="Delete task">&times;</button>' +
+        '</div>' +
+      '</div>';
+  }
+
+  function render() {
+    var now = Date.now();
+    var counts = Prioritix.quadrantCounts(tasks, now);
+    var ids = Prioritix.QUADRANT_IDS;
+    var escCount = 0;
+    for (var i = 0; i < ids.length; i++) {
+      var qid = ids[i];
+      var list = $('quad-' + qid);
+      list.innerHTML = '';
+      var cardCount = 0;
+      for (var j = 0; j < tasks.length; j++) {
+        var t = tasks[j];
+        if (Prioritix.effectiveQuadrant(t, now) === qid) {
+          list.insertAdjacentHTML('beforeend', taskCard(t, now));
+          cardCount++;
+          if (Prioritix.escalated(t, now)) escCount++;
+        }
+      }
+      if (cardCount === 0) {
+        list.insertAdjacentHTML('beforeend',
+          '<p class="text-xs text-slate-400 italic px-1 py-3 text-center border border-dashed border-[#e3dccb] rounded-xl">Empty — drag a task here or add one above.</p>');
+      }
+      var badge = list.parentElement.querySelector('.quad-count');
+      if (badge) badge.textContent = counts[qid];
+    }
+
+    /* escalate banner */
+    var banner = $('escalateBanner');
+    if (escCount > 0) {
+      banner.classList.remove('hidden');
+      banner.innerHTML = '<strong>' + escCount + ' task' + (escCount > 1 ? 's' : '') +
+        ' auto-escalated Q2 → Q1.</strong> ' +
+        'Their due dates are within ' + Prioritix.ESCALATION_DAYS + ' days, so Prioritix moved them to Do First. Handle them today.';
+    } else {
+      banner.classList.add('hidden');
+    }
+
+    /* top-3 */
+    var top3 = Prioritix.pickTop3(tasks, now);
+    var top3List = $('top3List');
+    top3List.innerHTML = '';
+    if (top3.length === 0) {
+      top3List.innerHTML = '<li class="text-sm text-slate-400 italic">No open tasks yet — add one above and your focus list will build itself.</li>';
+    } else {
+      var medals = ['#f59e0b', '#94a3b8', '#b45309'];
+      for (var k = 0; k < top3.length; k++) {
+        var item = top3[k];
+        var qi = Prioritix.QUADRANT_INFO[item.quadrant];
+        top3List.insertAdjacentHTML('beforeend',
+          '<li class="flex items-center gap-3 bg-white border border-[#e3dccb] rounded-xl p-3">' +
+            '<span class="font-display font-bold text-lg w-7 h-7 shrink-0 rounded-full flex items-center justify-center text-white" style="background:' + medals[k] + '">' + (k + 1) + '</span>' +
+            '<div class="min-w-0 flex-1">' +
+              '<p class="text-sm font-semibold text-slate-800 truncate">' + esc(item.task.title) + '</p>' +
+              '<p class="text-xs text-slate-400">' + item.quadrant + ' · ' + esc(qi.name) +
+                (item.task.due ? ' · ' + esc(Prioritix.dueLabel(item.task.due, now)) : '') + '</p>' +
+            '</div>' +
+            '<span class="text-xs font-bold text-[#2563eb] shrink-0">' + item.score + '</span>' +
+          '</li>');
+      }
+    }
+
+    /* counters */
+    var open = 0, done = 0;
+    for (var m = 0; m < tasks.length; m++) { if (tasks[m].completed) done++; else open++; }
+    $('statPlanned').textContent = open;
+    $('statCompleted').textContent = done;
+
+    renderWeek();
+  }
+
+  /* ---------- task actions (delegated) ---------- */
+  $('matrixBoard').addEventListener('click', function (e) {
+    var del = e.target.closest('.btn-del');
+    if (del) {
+      var id = del.getAttribute('data-id');
+      tasks = tasks.filter(function (t) { return t.id !== id; });
+      saveTasks();
+      render();
+      return;
+    }
+  });
+
+  $('matrixBoard').addEventListener('change', function (e) {
+    var box = e.target.closest('.btn-done');
+    if (!box) return;
+    var id = box.getAttribute('data-id');
+    for (var i = 0; i < tasks.length; i++) {
+      if (tasks[i].id === id) {
+        var upd = Prioritix.setCompleted(tasks[i], box.checked);
+        if (!upd.error) tasks[i] = upd;
+        break;
+      }
+    }
+    saveTasks();
+    render();
+  });
+
+  /* ---------- drag & drop between quadrants ---------- */
+  var dragId = null;
+  $('matrixBoard').addEventListener('dragstart', function (e) {
+    var card = e.target.closest('.task-card');
+    if (!card) return;
+    dragId = card.getAttribute('data-id');
+    card.classList.add('dragging');
+    e.dataTransfer.effectAllowed = 'move';
+    try { e.dataTransfer.setData('text/plain', dragId); } catch (err) {}
+  });
+  $('matrixBoard').addEventListener('dragend', function () {
+    dragId = null;
+    var cards = document.querySelectorAll('.task-card.dragging');
+    for (var i = 0; i < cards.length; i++) cards[i].classList.remove('dragging');
+    var zones = document.querySelectorAll('.quad-drop.drag-over');
+    for (var j = 0; j < zones.length; j++) zones[j].classList.remove('drag-over');
+  });
+
+  var drops = document.querySelectorAll('.quad-drop');
+  for (var di = 0; di < drops.length; di++) {
+    (function (zone) {
+      zone.addEventListener('dragover', function (e) {
+        e.preventDefault();
+        e.dataTransfer.dropEffect = 'move';
+        zone.classList.add('drag-over');
+      });
+      zone.addEventListener('dragleave', function () { zone.classList.remove('drag-over'); });
+      zone.addEventListener('drop', function (e) {
+        e.preventDefault();
+        zone.classList.remove('drag-over');
+        var id = dragId || (function () { try { return e.dataTransfer.getData('text/plain'); } catch (err) { return null; } })();
+        if (!id) return;
+        var targetQ = zone.getAttribute('data-quad');
+        for (var i = 0; i < tasks.length; i++) {
+          if (tasks[i].id === id) {
+            var moved = Prioritix.reassignQuadrant(tasks[i], targetQ);
+            if (!moved.error) {
+              tasks[i] = moved;
+              saveTasks();
+              render();
+              var el = document.querySelector('.task-card[data-id="' + id + '"]');
+              if (el) el.classList.add('flash');
+            }
+            break;
+          }
+        }
+      });
+    })(drops[di]);
+  }
+
+  /* ---------- weekly stats ---------- */
+  function renderWeek() {
+    var stats = Prioritix.weekStats(week);
+    var board = $('statsBoard');
+    board.innerHTML = '';
+    if (stats.days.length === 0) {
+      board.innerHTML = '<p class="text-sm text-slate-400 italic">No days logged yet — log today below to start your streak.</p>';
+    } else {
+      var maxP = 1;
+      for (var i = 0; i < stats.days.length; i++) {
+        if (stats.days[i].planned > maxP) maxP = stats.days[i].planned;
+      }
+      var html = '<div class="flex items-end gap-2 h-28">';
+      for (var j = 0; j < stats.days.length; j++) {
+        var d = stats.days[j];
+        var hP = Math.max(4, Math.round(d.planned / maxP * 96));
+        var hC = d.planned > 0 ? Math.round(d.completed / d.planned * hP) : 0;
+        html += '<div class="flex-1 flex flex-col items-center justify-end gap-1" title="' + esc(d.date) + ': ' + d.completed + '/' + d.planned + '">' +
+          '<div class="w-full bg-[#e3dccb] rounded-t-md relative" style="height:' + hP + 'px">' +
+            '<div class="absolute bottom-0 left-0 right-0 bg-[#2563eb] rounded-t-md" style="height:' + hC + 'px"></div>' +
+          '</div>' +
+          '<span class="text-[10px] font-semibold text-slate-500">' + esc(Prioritix.weekdayShort(d.date)) + '</span>' +
+        '</div>';
+      }
+      html += '</div>';
+      html += '<div class="mt-2 flex items-center gap-4 text-xs text-slate-500">' +
+        '<span class="flex items-center gap-1"><span class="inline-block w-2.5 h-2.5 rounded-sm bg-[#e3dccb]"></span>Planned</span>' +
+        '<span class="flex items-center gap-1"><span class="inline-block w-2.5 h-2.5 rounded-sm bg-[#2563eb]"></span>Completed</span>' +
+        '<span class="ml-auto font-semibold text-slate-700">' + stats.totalCompleted + ' / ' + stats.totalPlanned + '</span>' +
+      '</div>';
+      board.innerHTML = html;
+    }
+    $('statRate').textContent = stats.totalPlanned > 0 ? stats.rate + '%' : '—';
+    if ($('plannedInput').value === '') {
+      var open = 0;
+      for (var k = 0; k < tasks.length; k++) { if (!tasks[k].completed) open++; }
+      $('plannedInput').value = open;
+    }
+  }
+
+  $('btnLogDay').addEventListener('click', function () {
+    var p = parseInt($('plannedInput').value, 10);
+    var c = parseInt($('doneInput').value, 10);
+    week = Prioritix.upsertWeekDay(week, Prioritix.todayISO(), isNaN(p) ? 0 : p, isNaN(c) ? 0 : c);
+    saveWeek(week);
+    $('doneInput').value = '';
+    renderWeek();
+  });
+
+  $('btnClearDone').addEventListener('click', function () {
+    tasks = Prioritix.clearCompleted(tasks);
+    saveTasks();
+    render();
+  });
+
+  updateSuggest();
+  render();
+})();
+</script>
+</body>
+</html>
